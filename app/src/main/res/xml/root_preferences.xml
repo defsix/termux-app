@@ -10,7 +10,7 @@
         app:key="file_view_receiver_enabled"
         app:title="Show Termux in &quot;Open with&quot; menus"
         app:summary="Show Termux as an option when opening supported files from other apps."
-        app:defaultValue="false"/>
+        app:defaultValue="true"/>
 
     <Preference
         app:key="termux_api"

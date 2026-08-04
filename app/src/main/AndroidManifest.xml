@@ -140,7 +140,6 @@
 
         <activity-alias
             android:name=".app.api.file.FileViewReceiverActivity"
-            android:enabled="false"
             android:exported="true"
             android:targetActivity=".app.api.file.FileReceiverActivity">
 
