@@ -89,7 +89,7 @@ public class SettingsActivity extends AppCompatActivity {
                 context.getPackageName(), context.getPackageName() + FILE_VIEW_RECEIVER_ACTIVITY);
 
             int componentState = packageManager.getComponentEnabledSetting(componentName);
-            boolean enabled = componentState == PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
+            boolean enabled = componentState != PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
             preference.setChecked(enabled);
 
             preference.setOnPreferenceChangeListener((changedPreference, newValue) -> {
