@@ -1,5 +1,15 @@
 # defsix Termux changelog
 
+## v0.118.3-defsix.2
+
+### Changed
+- The generic Android file-view handler is enabled by default, matching upstream Termux behaviour.
+- Users can opt out with the "Show Termux in \"Open with\" menus" setting.
+
+### Fixed
+- The file-viewer toggle now persists the user's explicit choice across Settings reopen, app restarts, force-stops, and device restarts.
+- The saved toggle state is reapplied to the Android file-viewer component when Termux starts, preventing an explicit OFF choice from reverting to the default ON state.
+
 ## v0.118.3-defsix.1
 
 ### Added
