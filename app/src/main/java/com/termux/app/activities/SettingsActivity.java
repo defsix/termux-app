@@ -1,8 +1,6 @@
 package com.termux.app.activities;
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 
@@ -13,10 +11,11 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.termux.R;
+import com.termux.app.models.UserAction;
+import com.termux.app.settings.FileViewReceiverSettings;
 import com.termux.shared.activities.ReportActivity;
 import com.termux.shared.file.FileUtils;
 import com.termux.shared.models.ReportInfo;
-import com.termux.app.models.UserAction;
 import com.termux.shared.interact.ShareUtils;
 import com.termux.shared.android.PackageUtils;
 import com.termux.shared.termux.settings.preferences.TermuxAPIAppSharedPreferences;
@@ -56,8 +55,6 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public static class RootPreferencesFragment extends PreferenceFragmentCompat {
-        private static final String FILE_VIEW_RECEIVER_PREFERENCE_KEY = "file_view_receiver_enabled";
-        private static final String FILE_VIEW_RECEIVER_ACTIVITY = ".app.api.file.FileViewReceiverActivity";
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -81,25 +78,15 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         private void configureFileViewReceiverPreference(@NonNull Context context) {
-            SwitchPreferenceCompat preference = findPreference(FILE_VIEW_RECEIVER_PREFERENCE_KEY);
+            SwitchPreferenceCompat preference = findPreference(FileViewReceiverSettings.PREFERENCE_KEY);
             if (preference == null) return;
 
-            PackageManager packageManager = context.getPackageManager();
-            ComponentName componentName = new ComponentName(
-                context.getPackageName(), context.getPackageName() + FILE_VIEW_RECEIVER_ACTIVITY);
-
-            int componentState = packageManager.getComponentEnabledSetting(componentName);
-            boolean enabled = componentState != PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+            boolean enabled = FileViewReceiverSettings.isEnabled(context);
             preference.setChecked(enabled);
+            FileViewReceiverSettings.applySavedState(context);
 
             preference.setOnPreferenceChangeListener((changedPreference, newValue) -> {
-                boolean shouldEnable = Boolean.TRUE.equals(newValue);
-                packageManager.setComponentEnabledSetting(
-                    componentName,
-                    shouldEnable
-                        ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-                        : PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                    PackageManager.DONT_KILL_APP);
+                FileViewReceiverSettings.setEnabled(context, Boolean.TRUE.equals(newValue));
                 return true;
             });
         }
