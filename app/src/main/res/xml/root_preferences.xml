@@ -6,6 +6,42 @@
         app:summary="@string/termux_preferences_summary"
         app:fragment="com.termux.app.fragments.settings.TermuxPreferencesFragment"/>
 
+    <PreferenceCategory app:title="File receivers">
+
+        <SwitchPreferenceCompat
+            app:key="file_view_receiver_enabled"
+            app:title="Show Termux in &quot;Open with&quot; menus"
+            app:summary="Show Termux as an option when opening supported files from other apps."
+            app:persistent="false"
+            app:defaultValue="true"/>
+
+        <SwitchPreferenceCompat
+            app:key="file_share_receiver_enabled"
+            app:title="Show Termux in &quot;Share&quot; menus"
+            app:summary="Show Termux as an option when sharing supported files from other apps."
+            app:persistent="false"
+            app:defaultValue="true"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Developer options">
+
+        <EditTextPreference
+            app:key="file_view_receiver_mime_types"
+            app:title="&quot;Open with&quot; file type whitelist"
+            app:summary="Comma-separated MIME categories (application, audio, image, text, video) Termux should appear for in &quot;Open with&quot; menus. Leave blank to allow all types."
+            app:persistent="false"
+            app:dialogTitle="&quot;Open with&quot; file type whitelist"/>
+
+        <EditTextPreference
+            app:key="file_share_receiver_mime_types"
+            app:title="&quot;Share&quot; file type whitelist"
+            app:summary="Comma-separated MIME categories (application, audio, image, message, multipart, text, video) Termux should appear for in &quot;Share&quot; menus. Leave blank to allow all types."
+            app:persistent="false"
+            app:dialogTitle="&quot;Share&quot; file type whitelist"/>
+
+    </PreferenceCategory>
+
     <Preference
         app:key="termux_api"
         app:title="@string/termux_api_preferences_title"

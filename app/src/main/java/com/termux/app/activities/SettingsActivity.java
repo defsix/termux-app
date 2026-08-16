@@ -6,10 +6,14 @@ import android.os.Environment;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreferenceCompat;
 
 import com.termux.R;
+import com.termux.app.api.file.FileReceiverActivity;
+import com.termux.app.settings.TermuxPropertiesWriter;
 import com.termux.shared.activities.ReportActivity;
 import com.termux.shared.file.FileUtils;
 import com.termux.shared.models.ReportInfo;
@@ -23,8 +27,12 @@ import com.termux.shared.termux.settings.preferences.TermuxWidgetAppSharedPrefer
 import com.termux.shared.android.AndroidUtils;
 import com.termux.shared.termux.TermuxConstants;
 import com.termux.shared.termux.TermuxUtils;
+import com.termux.shared.termux.settings.properties.TermuxAppSharedProperties;
+import com.termux.shared.termux.settings.properties.TermuxPropertyConstants;
 import com.termux.shared.activity.media.AppCompatActivityUtils;
 import com.termux.shared.theme.NightMode;
+
+import java.util.Set;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -60,6 +68,11 @@ public class SettingsActivity extends AppCompatActivity {
 
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
+            configureFileViewReceiverPreference(context);
+            configureFileShareReceiverPreference(context);
+            configureFileViewReceiverMimeTypesPreference(context);
+            configureFileShareReceiverMimeTypesPreference(context);
+
             new Thread() {
                 @Override
                 public void run() {
@@ -69,6 +82,73 @@ public class SettingsActivity extends AppCompatActivity {
                     configureTermuxWidgetPreference(context);
                     configureAboutPreference(context);
                     configureDonatePreference(context);
+                }
+            }.start();
+        }
+
+        private void configureFileViewReceiverPreference(@NonNull Context context) {
+            SwitchPreferenceCompat preference = findPreference("file_view_receiver_enabled");
+            if (preference == null) return;
+
+            preference.setChecked(!TermuxAppSharedProperties.getProperties().isFileViewReceiverDisabled());
+
+            preference.setOnPreferenceChangeListener((changedPreference, newValue) -> {
+                boolean enabled = Boolean.TRUE.equals(newValue);
+                writePropertyAndApply(context, TermuxPropertyConstants.KEY_DISABLE_FILE_VIEW_RECEIVER, String.valueOf(!enabled));
+                return true;
+            });
+        }
+
+        private void configureFileShareReceiverPreference(@NonNull Context context) {
+            SwitchPreferenceCompat preference = findPreference("file_share_receiver_enabled");
+            if (preference == null) return;
+
+            preference.setChecked(!TermuxAppSharedProperties.getProperties().isFileShareReceiverDisabled());
+
+            preference.setOnPreferenceChangeListener((changedPreference, newValue) -> {
+                boolean enabled = Boolean.TRUE.equals(newValue);
+                writePropertyAndApply(context, TermuxPropertyConstants.KEY_DISABLE_FILE_SHARE_RECEIVER, String.valueOf(!enabled));
+                return true;
+            });
+        }
+
+        private void configureFileViewReceiverMimeTypesPreference(@NonNull Context context) {
+            EditTextPreference preference = findPreference("file_view_receiver_mime_types");
+            if (preference == null) return;
+
+            preference.setText(joinMimeTypes(TermuxAppSharedProperties.getProperties().getFileViewReceiverMimeTypesWhitelist()));
+
+            preference.setOnPreferenceChangeListener((changedPreference, newValue) -> {
+                writePropertyAndApply(context, TermuxPropertyConstants.KEY_FILE_VIEW_RECEIVER_MIME_TYPES, String.valueOf(newValue));
+                return true;
+            });
+        }
+
+        private void configureFileShareReceiverMimeTypesPreference(@NonNull Context context) {
+            EditTextPreference preference = findPreference("file_share_receiver_mime_types");
+            if (preference == null) return;
+
+            preference.setText(joinMimeTypes(TermuxAppSharedProperties.getProperties().getFileShareReceiverMimeTypesWhitelist()));
+
+            preference.setOnPreferenceChangeListener((changedPreference, newValue) -> {
+                writePropertyAndApply(context, TermuxPropertyConstants.KEY_FILE_SHARE_RECEIVER_MIME_TYPES, String.valueOf(newValue));
+                return true;
+            });
+        }
+
+        private static String joinMimeTypes(@NonNull Set<String> mimeTypes) {
+            return String.join(",", mimeTypes);
+        }
+
+        /** Persist a termux.properties key/value change and immediately apply it to the running app. */
+        private static void writePropertyAndApply(@NonNull Context context, @NonNull String key, @NonNull String value) {
+            new Thread() {
+                @Override
+                public void run() {
+                    if (TermuxPropertiesWriter.setProperty(key, value)) {
+                        TermuxAppSharedProperties.getProperties().loadTermuxPropertiesFromDisk();
+                        FileReceiverActivity.updateFileReceiverActivityComponentsState(context);
+                    }
                 }
             }.start();
         }
