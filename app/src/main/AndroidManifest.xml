@@ -157,6 +157,158 @@
             </intent-filter>
         </activity-alias>
 
+        <!--
+        Per-MIME-category aliases below are disabled by default and are only enabled at runtime
+        (see FileReceiverActivity#updateFileReceiverActivityComponentsState) when the user has
+        configured a `file-view-receiver-mime-types` / `file-share-receiver-mime-types` whitelist
+        in termux.properties. When no whitelist is configured, the aggregate aliases above continue
+        to be used exactly as before, so this is purely additive and opt-in.
+        -->
+
+        <activity-alias
+            android:name=".app.api.file.FileShareReceiverActivity$Application"
+            android:enabled="false"
+            android:exported="true"
+            android:targetActivity=".app.api.file.FileReceiverActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/*" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".app.api.file.FileShareReceiverActivity$Audio"
+            android:enabled="false"
+            android:exported="true"
+            android:targetActivity=".app.api.file.FileReceiverActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="audio/*" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".app.api.file.FileShareReceiverActivity$Image"
+            android:enabled="false"
+            android:exported="true"
+            android:targetActivity=".app.api.file.FileReceiverActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".app.api.file.FileShareReceiverActivity$Message"
+            android:enabled="false"
+            android:exported="true"
+            android:targetActivity=".app.api.file.FileReceiverActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="message/*" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".app.api.file.FileShareReceiverActivity$Multipart"
+            android:enabled="false"
+            android:exported="true"
+            android:targetActivity=".app.api.file.FileReceiverActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="multipart/*" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".app.api.file.FileShareReceiverActivity$Text"
+            android:enabled="false"
+            android:exported="true"
+            android:targetActivity=".app.api.file.FileReceiverActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/*" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".app.api.file.FileShareReceiverActivity$Video"
+            android:enabled="false"
+            android:exported="true"
+            android:targetActivity=".app.api.file.FileReceiverActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="video/*" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".app.api.file.FileViewReceiverActivity$Application"
+            android:enabled="false"
+            android:exported="true"
+            android:targetActivity=".app.api.file.FileReceiverActivity">
+            <intent-filter tools:ignore="AppLinkUrlError">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/*" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".app.api.file.FileViewReceiverActivity$Audio"
+            android:enabled="false"
+            android:exported="true"
+            android:targetActivity=".app.api.file.FileReceiverActivity">
+            <intent-filter tools:ignore="AppLinkUrlError">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="audio/*" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".app.api.file.FileViewReceiverActivity$Image"
+            android:enabled="false"
+            android:exported="true"
+            android:targetActivity=".app.api.file.FileReceiverActivity">
+            <intent-filter tools:ignore="AppLinkUrlError">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".app.api.file.FileViewReceiverActivity$Text"
+            android:enabled="false"
+            android:exported="true"
+            android:targetActivity=".app.api.file.FileReceiverActivity">
+            <intent-filter tools:ignore="AppLinkUrlError">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/*" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".app.api.file.FileViewReceiverActivity$Video"
+            android:enabled="false"
+            android:exported="true"
+            android:targetActivity=".app.api.file.FileReceiverActivity">
+            <intent-filter tools:ignore="AppLinkUrlError">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="video/*" />
+            </intent-filter>
+        </activity-alias>
+
         <provider
             android:name=".filepicker.TermuxDocumentsProvider"
             android:authorities="${TERMUX_PACKAGE_NAME}.documents"

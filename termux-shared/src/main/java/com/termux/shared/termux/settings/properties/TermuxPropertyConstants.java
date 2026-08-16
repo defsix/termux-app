@@ -323,6 +323,26 @@ public final class TermuxPropertyConstants {
 
 
 
+    /**
+     * Defines the key for a comma-separated whitelist of MIME type categories
+     * ("application", "audio", "image", "text", "video") that Termux should register itself as
+     * an `ACTION_VIEW` handler for. If unset or empty, the aggregate
+     * {@link TermuxConstants.TERMUX_APP#FILE_VIEW_RECEIVER_ACTIVITY_CLASS_NAME} alias is used and
+     * all categories are offered, matching pre-existing behaviour.
+     */
+    public static final String KEY_FILE_VIEW_RECEIVER_MIME_TYPES =  "file-view-receiver-mime-types"; // Default: "file-view-receiver-mime-types"
+
+    /**
+     * Defines the key for a comma-separated whitelist of MIME type categories
+     * ("application", "audio", "image", "message", "multipart", "text", "video") that Termux
+     * should register itself as an `ACTION_SEND` handler for. If unset or empty, the aggregate
+     * {@link TermuxConstants.TERMUX_APP#FILE_SHARE_RECEIVER_ACTIVITY_CLASS_NAME} alias is used and
+     * all categories are offered, matching pre-existing behaviour.
+     */
+    public static final String KEY_FILE_SHARE_RECEIVER_MIME_TYPES =  "file-share-receiver-mime-types"; // Default: "file-share-receiver-mime-types"
+
+
+
     /** Defines the key for extra keys */
     public static final String KEY_EXTRA_KEYS =  "extra-keys"; // Default: "extra-keys"
     //public static final String DEFAULT_IVALUE_EXTRA_KEYS = "[[ESC, TAB, CTRL, ALT, {key: '-', popup: '|'}, DOWN, UP]]"; // Single row
@@ -428,6 +448,8 @@ public final class TermuxPropertyConstants {
         KEY_DEFAULT_WORKING_DIRECTORY,
         KEY_EXTRA_KEYS,
         KEY_EXTRA_KEYS_STYLE,
+        KEY_FILE_SHARE_RECEIVER_MIME_TYPES,
+        KEY_FILE_VIEW_RECEIVER_MIME_TYPES,
         KEY_NIGHT_MODE,
         KEY_SOFT_KEYBOARD_TOGGLE_BEHAVIOUR,
         KEY_VOLUME_KEYS_BEHAVIOUR
