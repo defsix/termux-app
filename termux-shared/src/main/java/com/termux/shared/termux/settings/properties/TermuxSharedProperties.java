@@ -666,6 +666,34 @@ public abstract class TermuxSharedProperties {
         return (String) getInternalPropertyValue(TermuxPropertyConstants.KEY_DEFAULT_WORKING_DIRECTORY, true);
     }
 
+    /**
+     * Get the {@link TermuxPropertyConstants#KEY_FILE_VIEW_RECEIVER_MIME_TYPES} whitelist as a set
+     * of lowercase MIME type category names. Empty if unset, meaning no whitelist is configured
+     * and the aggregate `FileViewReceiverActivity` alias should be used for all categories.
+     */
+    public Set<String> getFileViewReceiverMimeTypesWhitelist() {
+        return parseMimeTypesWhitelist(getPropertyValue(TermuxPropertyConstants.KEY_FILE_VIEW_RECEIVER_MIME_TYPES, "", true));
+    }
+
+    /**
+     * Get the {@link TermuxPropertyConstants#KEY_FILE_SHARE_RECEIVER_MIME_TYPES} whitelist as a set
+     * of lowercase MIME type category names. Empty if unset, meaning no whitelist is configured
+     * and the aggregate `FileShareReceiverActivity` alias should be used for all categories.
+     */
+    public Set<String> getFileShareReceiverMimeTypesWhitelist() {
+        return parseMimeTypesWhitelist(getPropertyValue(TermuxPropertyConstants.KEY_FILE_SHARE_RECEIVER_MIME_TYPES, "", true));
+    }
+
+    private static Set<String> parseMimeTypesWhitelist(String value) {
+        Set<String> categories = new java.util.HashSet<>();
+        if (value == null || value.trim().isEmpty()) return categories;
+        for (String part : value.split(",")) {
+            String trimmed = part.trim().toLowerCase();
+            if (!trimmed.isEmpty()) categories.add(trimmed);
+        }
+        return categories;
+    }
+
     public String getNightMode() {
         return (String) getInternalPropertyValue(TermuxPropertyConstants.KEY_NIGHT_MODE, true);
     }

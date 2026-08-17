@@ -933,6 +933,27 @@ public final class TermuxConstants {
         /** Termux app FileViewReceiverActivity class name */
         public static final String FILE_VIEW_RECEIVER_ACTIVITY_CLASS_NAME = TERMUX_PACKAGE_NAME + ".app.api.file.FileViewReceiverActivity"; // Default: "com.termux.app.api.file.FileViewReceiverActivity"
 
+        /**
+         * Termux app per-MIME-category FileShareReceiverActivity/FileViewReceiverActivity alias
+         * class names. These are disabled by default and are only used when the user has
+         * configured a `file-share-receiver-mime-types`/`file-view-receiver-mime-types` whitelist,
+         * as an alternative to the aggregate {@link #FILE_SHARE_RECEIVER_ACTIVITY_CLASS_NAME} and
+         * {@link #FILE_VIEW_RECEIVER_ACTIVITY_CLASS_NAME} aliases above.
+         */
+        public static final String FILE_SHARE_RECEIVER_ACTIVITY_APPLICATION_CLASS_NAME = TERMUX_PACKAGE_NAME + ".app.api.file.FileShareReceiverActivity$Application";
+        public static final String FILE_SHARE_RECEIVER_ACTIVITY_AUDIO_CLASS_NAME = TERMUX_PACKAGE_NAME + ".app.api.file.FileShareReceiverActivity$Audio";
+        public static final String FILE_SHARE_RECEIVER_ACTIVITY_IMAGE_CLASS_NAME = TERMUX_PACKAGE_NAME + ".app.api.file.FileShareReceiverActivity$Image";
+        public static final String FILE_SHARE_RECEIVER_ACTIVITY_MESSAGE_CLASS_NAME = TERMUX_PACKAGE_NAME + ".app.api.file.FileShareReceiverActivity$Message";
+        public static final String FILE_SHARE_RECEIVER_ACTIVITY_MULTIPART_CLASS_NAME = TERMUX_PACKAGE_NAME + ".app.api.file.FileShareReceiverActivity$Multipart";
+        public static final String FILE_SHARE_RECEIVER_ACTIVITY_TEXT_CLASS_NAME = TERMUX_PACKAGE_NAME + ".app.api.file.FileShareReceiverActivity$Text";
+        public static final String FILE_SHARE_RECEIVER_ACTIVITY_VIDEO_CLASS_NAME = TERMUX_PACKAGE_NAME + ".app.api.file.FileShareReceiverActivity$Video";
+
+        public static final String FILE_VIEW_RECEIVER_ACTIVITY_APPLICATION_CLASS_NAME = TERMUX_PACKAGE_NAME + ".app.api.file.FileViewReceiverActivity$Application";
+        public static final String FILE_VIEW_RECEIVER_ACTIVITY_AUDIO_CLASS_NAME = TERMUX_PACKAGE_NAME + ".app.api.file.FileViewReceiverActivity$Audio";
+        public static final String FILE_VIEW_RECEIVER_ACTIVITY_IMAGE_CLASS_NAME = TERMUX_PACKAGE_NAME + ".app.api.file.FileViewReceiverActivity$Image";
+        public static final String FILE_VIEW_RECEIVER_ACTIVITY_TEXT_CLASS_NAME = TERMUX_PACKAGE_NAME + ".app.api.file.FileViewReceiverActivity$Text";
+        public static final String FILE_VIEW_RECEIVER_ACTIVITY_VIDEO_CLASS_NAME = TERMUX_PACKAGE_NAME + ".app.api.file.FileViewReceiverActivity$Video";
+
 
         /** Termux app core activity name. */
         public static final String TERMUX_ACTIVITY_NAME = TERMUX_PACKAGE_NAME + ".app.TermuxActivity"; // Default: "com.termux.app.TermuxActivity"

@@ -249,11 +249,36 @@ public class FileReceiverActivity extends AppCompatActivity {
         finish();
     }
 
+    /** Per-MIME-category alias class names for {@link TERMUX_APP#FILE_SHARE_RECEIVER_ACTIVITY_CLASS_NAME}. */
+    private static final java.util.Map<String, String> FILE_SHARE_RECEIVER_MIME_CATEGORY_CLASS_NAMES = new java.util.LinkedHashMap<String, String>() {{
+        put("application", TERMUX_APP.FILE_SHARE_RECEIVER_ACTIVITY_APPLICATION_CLASS_NAME);
+        put("audio", TERMUX_APP.FILE_SHARE_RECEIVER_ACTIVITY_AUDIO_CLASS_NAME);
+        put("image", TERMUX_APP.FILE_SHARE_RECEIVER_ACTIVITY_IMAGE_CLASS_NAME);
+        put("message", TERMUX_APP.FILE_SHARE_RECEIVER_ACTIVITY_MESSAGE_CLASS_NAME);
+        put("multipart", TERMUX_APP.FILE_SHARE_RECEIVER_ACTIVITY_MULTIPART_CLASS_NAME);
+        put("text", TERMUX_APP.FILE_SHARE_RECEIVER_ACTIVITY_TEXT_CLASS_NAME);
+        put("video", TERMUX_APP.FILE_SHARE_RECEIVER_ACTIVITY_VIDEO_CLASS_NAME);
+    }};
+
+    /** Per-MIME-category alias class names for {@link TERMUX_APP#FILE_VIEW_RECEIVER_ACTIVITY_CLASS_NAME}. */
+    private static final java.util.Map<String, String> FILE_VIEW_RECEIVER_MIME_CATEGORY_CLASS_NAMES = new java.util.LinkedHashMap<String, String>() {{
+        put("application", TERMUX_APP.FILE_VIEW_RECEIVER_ACTIVITY_APPLICATION_CLASS_NAME);
+        put("audio", TERMUX_APP.FILE_VIEW_RECEIVER_ACTIVITY_AUDIO_CLASS_NAME);
+        put("image", TERMUX_APP.FILE_VIEW_RECEIVER_ACTIVITY_IMAGE_CLASS_NAME);
+        put("text", TERMUX_APP.FILE_VIEW_RECEIVER_ACTIVITY_TEXT_CLASS_NAME);
+        put("video", TERMUX_APP.FILE_VIEW_RECEIVER_ACTIVITY_VIDEO_CLASS_NAME);
+    }};
+
     /**
      * Update {@link TERMUX_APP#FILE_SHARE_RECEIVER_ACTIVITY_CLASS_NAME} component state depending on
      * {@link TermuxPropertyConstants#KEY_DISABLE_FILE_SHARE_RECEIVER} value and
      * {@link TERMUX_APP#FILE_VIEW_RECEIVER_ACTIVITY_CLASS_NAME} component state depending on
      * {@link TermuxPropertyConstants#KEY_DISABLE_FILE_VIEW_RECEIVER} value.
+     *
+     * If a {@link TermuxPropertyConstants#KEY_FILE_SHARE_RECEIVER_MIME_TYPES}/
+     * {@link TermuxPropertyConstants#KEY_FILE_VIEW_RECEIVER_MIME_TYPES} whitelist is configured,
+     * the aggregate alias is disabled instead and only the matching per-MIME-category aliases are
+     * enabled, so Termux only appears in "Open with"/"Share" for the whitelisted categories.
      */
     public static void updateFileReceiverActivityComponentsState(@NonNull Context context) {
         new Thread() {
@@ -261,27 +286,35 @@ public class FileReceiverActivity extends AppCompatActivity {
             public void run() {
                 TermuxAppSharedProperties properties = TermuxAppSharedProperties.getProperties();
 
-                String errmsg;
-                boolean state;
+                updateReceiverComponentsState(context, TERMUX_APP.FILE_SHARE_RECEIVER_ACTIVITY_CLASS_NAME,
+                    FILE_SHARE_RECEIVER_MIME_CATEGORY_CLASS_NAMES,
+                    properties.isFileShareReceiverDisabled(), properties.getFileShareReceiverMimeTypesWhitelist());
 
-                state = !properties.isFileShareReceiverDisabled();
-                Logger.logVerbose(LOG_TAG, "Setting " + TERMUX_APP.FILE_SHARE_RECEIVER_ACTIVITY_CLASS_NAME + " component state to " + state);
-                errmsg = PackageUtils.setComponentState(context,TermuxConstants.TERMUX_PACKAGE_NAME,
-                    TERMUX_APP.FILE_SHARE_RECEIVER_ACTIVITY_CLASS_NAME,
-                    state, null, false, false);
-                if (errmsg != null)
-                    Logger.logError(LOG_TAG, errmsg);
-
-                state = !properties.isFileViewReceiverDisabled();
-                Logger.logVerbose(LOG_TAG, "Setting " + TERMUX_APP.FILE_VIEW_RECEIVER_ACTIVITY_CLASS_NAME + " component state to " + state);
-                errmsg = PackageUtils.setComponentState(context,TermuxConstants.TERMUX_PACKAGE_NAME,
-                    TERMUX_APP.FILE_VIEW_RECEIVER_ACTIVITY_CLASS_NAME,
-                    state, null, false, false);
-                if (errmsg != null)
-                    Logger.logError(LOG_TAG, errmsg);
-
+                updateReceiverComponentsState(context, TERMUX_APP.FILE_VIEW_RECEIVER_ACTIVITY_CLASS_NAME,
+                    FILE_VIEW_RECEIVER_MIME_CATEGORY_CLASS_NAMES,
+                    properties.isFileViewReceiverDisabled(), properties.getFileViewReceiverMimeTypesWhitelist());
             }
         }.start();
+    }
+
+    private static void updateReceiverComponentsState(@NonNull Context context, @NonNull String aggregateClassName,
+            @NonNull java.util.Map<String, String> categoryClassNames, boolean masterDisabled, @NonNull java.util.Set<String> whitelist) {
+        boolean whitelistMode = !masterDisabled && !whitelist.isEmpty();
+
+        setComponentState(context, aggregateClassName, !masterDisabled && !whitelistMode);
+
+        for (java.util.Map.Entry<String, String> category : categoryClassNames.entrySet()) {
+            boolean categoryEnabled = whitelistMode && whitelist.contains(category.getKey());
+            setComponentState(context, category.getValue(), categoryEnabled);
+        }
+    }
+
+    private static void setComponentState(@NonNull Context context, @NonNull String className, boolean state) {
+        Logger.logVerbose(LOG_TAG, "Setting " + className + " component state to " + state);
+        String errmsg = PackageUtils.setComponentState(context, TermuxConstants.TERMUX_PACKAGE_NAME,
+            className, state, null, false, false);
+        if (errmsg != null)
+            Logger.logError(LOG_TAG, errmsg);
     }
 
 }
