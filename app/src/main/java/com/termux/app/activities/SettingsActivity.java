@@ -13,11 +13,11 @@ import androidx.preference.SwitchPreferenceCompat;
 
 import com.termux.R;
 import com.termux.app.api.file.FileReceiverActivity;
+import com.termux.app.models.UserAction;
 import com.termux.app.settings.TermuxPropertiesWriter;
 import com.termux.shared.activities.ReportActivity;
 import com.termux.shared.file.FileUtils;
 import com.termux.shared.models.ReportInfo;
-import com.termux.app.models.UserAction;
 import com.termux.shared.interact.ShareUtils;
 import com.termux.shared.android.PackageUtils;
 import com.termux.shared.termux.settings.preferences.TermuxAPIAppSharedPreferences;
@@ -61,6 +61,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public static class RootPreferencesFragment extends PreferenceFragmentCompat {
+
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             Context context = getContext();
@@ -157,7 +158,6 @@ public class SettingsActivity extends AppCompatActivity {
             Preference termuxAPIPreference = findPreference("termux_api");
             if (termuxAPIPreference != null) {
                 TermuxAPIAppSharedPreferences preferences = TermuxAPIAppSharedPreferences.build(context, false);
-                // If failed to get app preferences, then likely app is not installed, so do not show its preference
                 termuxAPIPreference.setVisible(preferences != null);
             }
         }
@@ -166,7 +166,6 @@ public class SettingsActivity extends AppCompatActivity {
             Preference termuxFloatPreference = findPreference("termux_float");
             if (termuxFloatPreference != null) {
                 TermuxFloatAppSharedPreferences preferences = TermuxFloatAppSharedPreferences.build(context, false);
-                // If failed to get app preferences, then likely app is not installed, so do not show its preference
                 termuxFloatPreference.setVisible(preferences != null);
             }
         }
@@ -175,7 +174,6 @@ public class SettingsActivity extends AppCompatActivity {
             Preference termuxTaskerPreference = findPreference("termux_tasker");
             if (termuxTaskerPreference != null) {
                 TermuxTaskerAppSharedPreferences preferences = TermuxTaskerAppSharedPreferences.build(context, false);
-                // If failed to get app preferences, then likely app is not installed, so do not show its preference
                 termuxTaskerPreference.setVisible(preferences != null);
             }
         }
@@ -184,7 +182,6 @@ public class SettingsActivity extends AppCompatActivity {
             Preference termuxWidgetPreference = findPreference("termux_widget");
             if (termuxWidgetPreference != null) {
                 TermuxWidgetAppSharedPreferences preferences = TermuxWidgetAppSharedPreferences.build(context, false);
-                // If failed to get app preferences, then likely app is not installed, so do not show its preference
                 termuxWidgetPreference.setVisible(preferences != null);
             }
         }
@@ -226,9 +223,6 @@ public class SettingsActivity extends AppCompatActivity {
             if (donatePreference != null) {
                 String signingCertificateSHA256Digest = PackageUtils.getSigningCertificateSHA256DigestForPackage(context);
                 if (signingCertificateSHA256Digest != null) {
-                    // If APK is a Google Playstore release, then do not show the donation link
-                    // since Termux isn't exempted from the playstore policy donation links restriction
-                    // Check Fund solicitations: https://pay.google.com/intl/en_in/about/policy/
                     String apkRelease = TermuxUtils.getAPKRelease(signingCertificateSHA256Digest);
                     if (apkRelease == null || apkRelease.equals(TermuxConstants.APK_RELEASE_GOOGLE_PLAYSTORE_SIGNING_CERTIFICATE_SHA256_DIGEST)) {
                         donatePreference.setVisible(false);
